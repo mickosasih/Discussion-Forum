@@ -13,7 +13,6 @@ if(isset($_GET['id'])){
                 $$k = $v;
             }
         }
-        $_SESSION['post_id'] = $_GET['id'];
     }else{
         header('Location: ./home.php');
     }
@@ -49,7 +48,7 @@ unset($_SESSION['msg']);
                     <?php if(isset($_SESSION['id'])): ?>
             <?php if($_SESSION['id'] == $user_id): ?>
                 <div class="button_top">
-                <form action="./view_controllers.php" method = "POST">
+                <form action="./view_controllers.php?id=<?= $_GET['id'] ?>" method = "POST">
             <button class="button_view" name="delete" value="delete">Delete</button>
             </form>
             <a class="button_view" href="./manage_post.php?id=<?= $_GET['id'] ?>">Edit</a>
@@ -87,7 +86,7 @@ unset($_SESSION['msg']);
                         <p id="namakomen"><?=strip_tags($row['fullname'])?></a>
                         </div>
                         <?php if($row['user_id'] == $_SESSION['id']): ?>
-                            <form action="./view_controllers.php" method="POST">
+                            <form action="./view_controllers.php?id=<?= $_GET['id'] ?>" method="POST">
                             <button class="button_view" name="deletecomment" value="<?= $row['id'] ?>">Delete</button>
                             </form>
                     <?php endif; ?>
@@ -97,7 +96,7 @@ unset($_SESSION['msg']);
                             </div>
             <?php endwhile; ?>
             <div class= "card-komen">
-            <form action="./view_controllers.php" method="POST">
+            <form action="./view_controllers.php?id=<?= $_GET['id'] ?>" method="POST">
                         <div class="form-group">
                             <textarea type="text"placeholder="Write down your comments" name="comment" id="comment" required ></textarea>
                         </div>
