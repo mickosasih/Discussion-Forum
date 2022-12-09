@@ -1,4 +1,5 @@
 <?php 
+session_start();
 require_once('DBConnection.php');
 require_once('header.php');
 $db = new DBConnection;
@@ -12,54 +13,12 @@ if(isset($_GET['id'])){
                 $$k = $v;
             }
         }
+        $_SESSION['post_id'] = $_GET['id'];
     }else{
         header('Location: ./home.php');
     }
 }else{
     header('Location: ./home.php');
-}
-if($_SERVER['REQUEST_METHOD']==="POST"){
-    if(array_key_exists('delete', $_POST) && $_SESSION['id'] == $user_id){
-        extract($_POST);
-		$del = $conn->query("DELETE FROM `post_list` where id = '{$_GET['id']}'");
-		if($del){
-            header('Location: ./home.php');
-		}else{
-			echo "<div class='card'>Delete Failed</div>";
-		}
-    }
-    if(array_key_exists('addcomment', $_POST) && isset($_SESSION['id'])){
-        $_POST['user_id'] = $_SESSION['id'];
-        $_POST['post_id'] = $_GET['id'];
-		extract($_POST);
-		$data = "";
-		foreach($_POST as $k =>$v){
-			if(!in_array($k,array('id'))&& $k != 'addcomment'){
-				if(!empty($data)) $data .=",";
-				$v = $conn->real_escape_string($v);
-				$data .= " `{$k}`='{$v}' ";
-			}
-		}
-		$sql = "INSERT INTO `comment_list` set {$data} ";
-        $save = $conn->query($sql);
-		if($save){
-			echo "<div class='card'>New Comment successfully added</div>";
-		}else{
-			echo "<div class='card'>Failed to add comment</div>";
-		}
-    }
-    if(array_key_exists('deletecomment', $_POST)){
-        $comments = $conn->query("SELECT c.*FROM `comment_list` c where c.post_id ='{$id}' and c.id = '{$_POST['deletecomment']}'");
-        $row = $comments->fetch_assoc();
-        if($row['user_id'] == $_SESSION['id']){
-            $del = $conn->query("DELETE FROM `comment_list` where id = '{$_POST['deletecomment']}'");
-    if($del){
-        echo "<div class='card'>Comment successfully deleted</div>";
-    }else{
-        echo "<div class='card'>Failed to delete comment</div>";
-    }
-}
-        }
 }
 ?>
 
@@ -71,6 +30,11 @@ if($_SERVER['REQUEST_METHOD']==="POST"){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum</title>
     <link rel="stylesheet" href="./style.css">
+    <?php if(isset($_SESSION['msg'])){?>
+        <div class="card"><?=$_SESSION['msg']?></div>
+    <?php 
+unset($_SESSION['msg']);
+}?>
 </head>
 <body>
         <?php 
@@ -85,7 +49,7 @@ if($_SERVER['REQUEST_METHOD']==="POST"){
                     <?php if(isset($_SESSION['id'])): ?>
             <?php if($_SESSION['id'] == $user_id): ?>
                 <div class="button_top">
-                <form action=""method = "POST">
+                <form action="./view_controllers.php" method = "POST">
             <button class="button_view" name="delete" value="delete">Delete</button>
             </form>
             <a class="button_view" href="./manage_post.php?id=<?= $_GET['id'] ?>">Edit</a>
@@ -123,7 +87,7 @@ if($_SERVER['REQUEST_METHOD']==="POST"){
                         <p id="namakomen"><?=strip_tags($row['fullname'])?></a>
                         </div>
                         <?php if($row['user_id'] == $_SESSION['id']): ?>
-                            <form action="" method="POST">
+                            <form action="./view_controllers.php" method="POST">
                             <button class="button_view" name="deletecomment" value="<?= $row['id'] ?>">Delete</button>
                             </form>
                     <?php endif; ?>
@@ -133,9 +97,9 @@ if($_SERVER['REQUEST_METHOD']==="POST"){
                             </div>
             <?php endwhile; ?>
             <div class= "card-komen">
-            <form action="" method="POST">
+            <form action="./view_controllers.php" method="POST">
                         <div class="form-group">
-                            <textarea type="text"placeholder="Write down your comments" name="comment" id="comment"></textarea>
+                            <textarea type="text"placeholder="Write down your comments" name="comment" id="comment" required ></textarea>
                         </div>
                         <div class="btn">
                             <a href="./home.php" class="button" >Back</a>

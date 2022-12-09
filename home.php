@@ -1,4 +1,5 @@
-<?php 
+<?php
+session_start();
 require_once('DBConnection.php');
 require_once('header.php');
 $db = new DBConnection;
@@ -13,6 +14,11 @@ date_default_timezone_set("Asia/Bangkok");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum</title>
     <link rel="stylesheet" href="./style.css">
+    <?php if(isset($_SESSION['msg'])){?>
+        <div class="card"><?=$_SESSION['msg']?></div>
+    <?php 
+unset($_SESSION['msg']);
+}?>
 </head>
 <body>
     <div class = "container">

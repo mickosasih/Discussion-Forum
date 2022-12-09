@@ -1,48 +1,5 @@
 <?php 
 require_once('header.php');
-require_once('validate_image.php');
-    
-    require_once('DBConnection.php');
-    $db = new DBConnection;
-    $conn = $db->conn;
-    if($_SERVER['REQUEST_METHOD']==="POST" && !empty($_POST['fullname']) && !empty($_POST['username'])&& !empty($_POST['password'])){
-		if(!empty($_POST['password']))
-			$_POST['password'] = md5($_POST['password']);
-		else
-		unset($_POST['password']);
-		extract($_POST);
-		$data = "";
-		$check = $conn->query("SELECT * FROM `users` where username = '{$username}' ")->num_rows;
-		if($check > 0){
-            echo "<div class='card'>Username already exists</div>";
-		}
-        else{
-            foreach($_POST as $k => $v){
-                $v = $conn->real_escape_string($v);
-                if(!in_array($k, ['id']) && !is_array($_POST[$k])){
-                    if(!empty($data)) $data .= ", ";
-                    $data .= " `{$k}` = '{$v}' ";
-                }
-            }
-            $sql = "INSERT INTO `users` set {$data} ";
-            $save = $conn->query($sql);
-            if($save){
-                $uid = !empty($id) ? $id : $conn->insert_id;
-                if(!empty($_FILES['avatar']['tmp_name'])){
-                    $file_name = $_FILES['avatar']['name'];
-                    $temp_file_path = $_FILES['avatar']['tmp_name'];
-                    $new_file_path = "./uploads/avatars/$uid.png";
-                    move_uploaded_file($temp_file_path, $new_file_path);
-                    $fname = "uploads/avatars/$uid.png";
-                    $conn->query("UPDATE `users` set `avatar` = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$uid}'");
-                }
-                echo "<div class='card'>Your Account has been created successfully</div>";
-            }
-            else{
-                echo "<div class='card'>Failed to create account</div>";
-            }
-        }
-    }
      ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,10 +9,15 @@ require_once('validate_image.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum</title>
     <link rel="stylesheet" href="./style.css">
+    <?php if(isset($_SESSION['msg'])){?>
+        <div class="card"><?=$_SESSION['msg']?></div>
+    <?php 
+unset($_SESSION['msg']);
+}?>
 </head>
 <body>
     <div class="login_card">
-        <form action="" method="POST" enctype="multipart/form-data">
+        <form action="./register_controllers.php" method="POST" enctype="multipart/form-data">
         <div class="register_content">
             <h1 id="title_center">Create Account</h1><br>
             <div>
