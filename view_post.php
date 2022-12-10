@@ -1,9 +1,7 @@
 <?php 
-session_start();
-require_once('DBConnection.php');
+require_once('sess_auth.php');
 require_once('header.php');
-$db = new DBConnection;
-$conn = $db->conn;
+require_once('./connection.php');
 date_default_timezone_set("Asia/Bangkok");
 if(isset($_GET['id'])){
     $qry = $conn->query("SELECT p.*, u.username, u.avatar FROM `post_list` p inner join `users` u on p.user_id = u.id where p.id= '{$_GET['id']}'");
@@ -37,7 +35,7 @@ unset($_SESSION['msg']);
 </head>
 <body>
         <?php 
-        $posts = $conn->query("SELECT p.* FROM `post_list` p where p.id= '{$_GET['id']}' order by abs(unix_timestamp(p.date_created)) desc");
+        $posts = $conn->query("SELECT p.* FROM `post_list` p where p.id= '{$_GET['id']}'");
         $row = $posts->fetch_assoc();
         ?>
         <div class="card">
@@ -72,7 +70,7 @@ unset($_SESSION['msg']);
         <?php if(isset($_SESSION['id'])): ?>
         <h3 id="judulkomen">Comments : </h3>
         <?php 
-        $comments = $conn->query("SELECT c.*, u.fullname, u.avatar FROM `comment_list` c inner join `users` u on c.user_id = u.id where c.post_id ='{$id}' order by abs(unix_timestamp(c.date_created)) asc ");
+        $comments = $conn->query("SELECT c.*, u.fullname, u.avatar FROM `comment_list` c inner join `users` u on c.user_id = u.id where c.post_id ='{$id}' order by abs(unix_timestamp(c.date_created)) desc");
         while($row = $comments->fetch_assoc()):
         ?>
         <div class="card-komen">

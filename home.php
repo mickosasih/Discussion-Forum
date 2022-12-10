@@ -1,9 +1,7 @@
 <?php
-session_start();
-require_once('DBConnection.php');
+require_once('sess_auth.php');
 require_once('header.php');
-$db = new DBConnection;
-$conn = $db->conn;
+require_once('./connection.php');
 date_default_timezone_set("Asia/Bangkok");
 ?>
 <!DOCTYPE html>

@@ -1,9 +1,7 @@
 <?php 
-require_once('DBConnection.php');
+require_once('./connection.php');
 require_once('header.php');
 require_once('sess_auth.php');
-$db = new DBConnection;
-$conn = $db->conn;
 date_default_timezone_set("Asia/Bangkok");
 if(isset($_GET['id'])){
     $qry = $conn->query("SELECT * FROM `post_list` where id= '{$_GET['id']}' and user_id = '{$_SESSION['id']}'");
@@ -18,39 +16,6 @@ if(isset($_GET['id'])){
         header('Location: ./home.php');
     }
 }
-if($_SERVER['REQUEST_METHOD']==="POST" && isset($_SESSION['id'])){
-
-    if(empty($_POST['id'])){
-        $_POST['user_id'] = $_SESSION['id'];
-    }
-
-extract($_POST);
-$data = "";
-foreach($_POST as $k =>$v){
-    if(!in_array($k,array('id'))){
-        if(!empty($data)) $data .=",";
-        $v = $conn->real_escape_string($v);
-        $data .= " `{$k}`='{$v}' ";
-    }
-}
-if(empty($id)){
-    $sql = "INSERT INTO `post_list` set {$data} ";
-}else{
-        $sql = "UPDATE `post_list` set {$data} where id = '{$id}' ";
-}
-$save = $conn->query($sql);
-if($save){
-    if(empty($id)){
-        echo "<div class='card'>New Post successfully saved</div>";
-        $id = $conn->insert_id;
-    }
-    else
-    echo "<div class='card'>Post successfully updated</div>";
-    
-}else{
-    echo "<div class='card'>Failed</div>";
-}
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -60,6 +25,11 @@ if($save){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum</title>
     <link rel="stylesheet" href="./style.css">
+    <?php if(isset($_SESSION['msg'])){?>
+        <div class="card"><?=$_SESSION['msg']?></div>
+    <?php 
+unset($_SESSION['msg']);
+}?>
 </head>
 <body>
     <div>
@@ -67,7 +37,7 @@ if($save){
     </div>
         <div class="card">
             <div>
-            <form action="" id="post-form" method="POST">
+            <form action="<?= isset($_GET['id']) ? './post_controllers.php?id='.$_GET['id'] : './post_controllers.php' ?>" id="post-form" method="POST">
                         <input type="hidden" name="id" value="<?= isset($id) ? $id : '' ?>">
                         <div class="form-group">
                             <label for="title" id="label">Title</label><br>

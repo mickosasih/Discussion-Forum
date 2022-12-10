@@ -1,9 +1,6 @@
 <?php 
 require_once('sess_auth.php');
-require_once('getuserip.php');
-    require_once('DBConnection.php');
-    $db = new DBConnection;
-    $conn = $db->conn;
+require_once('./connection.php');
     date_default_timezone_set("Asia/Bangkok");
     
     if($_SERVER['REQUEST_METHOD'] === "POST" && !empty($_POST['username'])&& !empty($_POST['password'])){

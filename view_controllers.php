@@ -1,8 +1,6 @@
 <?php 
-session_start();
-require_once('DBConnection.php');
-$db = new DBConnection;
-$conn = $db->conn;
+require_once('sess_auth.php');
+require_once('./connection.php');
 date_default_timezone_set("Asia/Bangkok");
 if(isset($_GET['id'])){
     $qry = $conn->query("SELECT p.*, u.username, u.avatar FROM `post_list` p inner join `users` u on p.user_id = u.id where p.id= '{$_GET['id']}'");
@@ -25,7 +23,7 @@ if($_SERVER['REQUEST_METHOD']==="POST"){
         extract($_POST);
 		$del = $conn->query("DELETE FROM `post_list` where id = '{$_GET['id']}'");
 		if($del){
-            $_SESSION['msg'] = "Successfully deleted";
+            $_SESSION['msg'] = "Post deleted successfully ";
             header('Location: ./home.php');
             die;
 		}else{

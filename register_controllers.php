@@ -1,27 +1,25 @@
 <?php 
-session_start();
- require_once('DBConnection.php');
-    $db = new DBConnection;
-    $conn = $db->conn;
+require_once('sess_auth.php');
+require_once('./connection.php');
     if($_SERVER['REQUEST_METHOD']==="POST" && !empty($_POST['fullname']) && !empty($_POST['username'])&& !empty($_POST['password'])){
-        $allowed_image_extension = array(
-            "png",
-            "jpg",
-            "jpeg"
-        );
-        
-        // Get image file extension
-        $file_extension = pathinfo($_FILES["avatar"]["name"], PATHINFO_EXTENSION);
-       // Validate file input to check if is with valid extension
-        if (! in_array($file_extension, $allowed_image_extension)) {
-                $_SESSION['msg'] =  "Upload valid images. Only PNG and JPEG are allowed.";
+        if(!empty($_FILES['avatar']['tmp_name'])){
+            $allowed_image_extension = array(
+                "png",
+                "jpg",
+                "jpeg"
+            );
+            $file_extension = pathinfo($_FILES["avatar"]["name"], PATHINFO_EXTENSION);
+    
+            if (! in_array($file_extension, $allowed_image_extension)) {
+                    $_SESSION['msg'] =  "Upload valid images. Only PNG and JPEG are allowed.";
+                    header("Location: ./register.php");
+                    die;
+            }   
+            else if(($_FILES["avatar"]["size"] > 2000000)) {
+                $_SESSION['msg'] = "Image size exceeds 2MB";
                 header("Location: ./register.php");
                 die;
-        }    // Validate image file size
-        else if(($_FILES["avatar"]["size"] > 2000000)) {
-            $_SESSION['msg'] = "Image size exceeds 2MB";
-            header("Location: ./register.php");
-            die;
+            }
         }
 		$_POST['password'] = md5($_POST['password']);
 		extract($_POST);

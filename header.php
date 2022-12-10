@@ -1,8 +1,15 @@
 <?php 
-require_once('validate_image.php');
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+function validate_image($file){
+	if(!empty($file)){
+        $ex = explode("?",$file);
+        $file = $ex[0];
+        $ts = isset($ex[1]) ? "?".$ex[1] : '';
+		if(is_file(str_replace('\\','/',__DIR__).'/'.$file)){
+			return "http://localhost/project/".$file.$ts;
+        }
+    }
 }
+require_once('sess_auth.php');
 date_default_timezone_set("Asia/Bangkok");
 ?>
 <!DOCTYPE html>
