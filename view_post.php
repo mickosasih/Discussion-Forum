@@ -28,7 +28,7 @@ if(isset($_GET['id'])){
     <title>Forum</title>
     <link rel="stylesheet" href="./style.css">
     <?php if(isset($_SESSION['msg'])){?>
-        <div class="card"><?=$_SESSION['msg']?></div>
+        <div class="card-komen"><?=$_SESSION['msg']?></div>
     <?php 
 unset($_SESSION['msg']);
 }?>
@@ -96,7 +96,7 @@ unset($_SESSION['msg']);
             <div class= "card-komen">
             <form action="./view_controllers.php?id=<?= $_GET['id'] ?>" method="POST">
                         <div class="form-group">
-                            <textarea type="text"placeholder="Write down your comments" name="comment" id="comment" required ></textarea>
+                            <textarea type="text"placeholder="Write down your comments" name="comment" id="comment" minlength = "4" maxlength="512" required ></textarea>
                         </div>
                         <div class="btn">
                             <a href="./home.php" class="button" >Back</a>

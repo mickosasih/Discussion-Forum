@@ -33,6 +33,12 @@ a{
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
+#home_title{
+    white-space: nowrap; 
+    width: 325px;
+    overflow: hidden;
+  text-overflow: ellipsis; 
+}
 .card{
     margin-top: 50px;
     margin-left: 50px;
@@ -115,7 +121,7 @@ a{
 #content{
     width: 100%;
     box-sizing: border-box;
-    height: 25rem;
+    height: 20rem;
     padding: 10px;
     margin-top: 10px;
     font-size: medium;

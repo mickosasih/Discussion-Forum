@@ -25,9 +25,11 @@ if(isset($_GET['id'])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum</title>
     <link rel="stylesheet" href="./style.css">
-    <?php if(isset($_SESSION['msg'])){?>
-        <div class="card"><?=$_SESSION['msg']?></div>
+    <?php if(isset($_SESSION['msg'])){
+        foreach($_SESSION['msg'] as $i=> $message){?>
+        <div class="card-komen"><?=$message?></div>
     <?php 
+    }
 unset($_SESSION['msg']);
 }?>
 </head>
@@ -41,11 +43,11 @@ unset($_SESSION['msg']);
                         <input type="hidden" name="id" value="<?= isset($id) ? $id : '' ?>">
                         <div class="form-group">
                             <label for="title" id="label">Title</label><br>
-                            <input type="text" class="form-control rounded-0" placeholder="Title" name="title" id="input_text" value="<?= isset($title) ? $title : "" ?>">
+                            <input type="text" placeholder="Title" name="title" id="input_text" minlength = "4" maxlength="64" required value="<?= isset($title) ? $title : "" ?>">
                         </div>
                         <div class="form-group">
                             <label for="content" id="label">Content</label><br>
-                            <textarea type="text" class="form-control rounded-0" placeholder="Write down your thoughts" name="content" id="content"><?= isset($content) ? $content : "" ?></textarea>
+                            <textarea type="text" placeholder="Write down your thoughts" name="content" id="content" minlength = "4" maxlength="3072" required><?= isset($content) ? $content : "" ?></textarea>
                         </div>
              </form>
             </div>

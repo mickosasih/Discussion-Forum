@@ -13,7 +13,7 @@ date_default_timezone_set("Asia/Bangkok");
     <title>Forum</title>
     <link rel="stylesheet" href="./style.css">
     <?php if(isset($_SESSION['msg'])){?>
-        <div class="card"><?=$_SESSION['msg']?></div>
+        <div class="card-komen"><?=$_SESSION['msg']?></div>
     <?php 
 unset($_SESSION['msg']);
 }?>
@@ -28,7 +28,7 @@ unset($_SESSION['msg']);
         <a href="./view_post.php?id=<?= $row['id'] ?>">
             <article>
                         <div>
-                        <h1><?= strip_tags($row['title']) ?></h1><br>
+                        <h1 id="home_title"><?= strip_tags($row['title']) ?></h1><br>
                         <div id="text"><?= strip_tags($row['content']) ?></div>
                         </div>
                         <div>

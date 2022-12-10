@@ -12,7 +12,7 @@ date_default_timezone_set("Asia/Bangkok");
     <title>Forum</title>
     <link rel="stylesheet" href="./style.css">
     <?php if(isset($_SESSION['msg'])){?>
-        <div class="card"><?=$_SESSION['msg']?></div>
+        <div class="card-komen"><?=$_SESSION['msg']?></div>
     <?php 
 unset($_SESSION['msg']);
 }?>

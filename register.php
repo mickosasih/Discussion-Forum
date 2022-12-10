@@ -11,7 +11,7 @@ require_once('header.php');
     <title>Forum</title>
     <link rel="stylesheet" href="./style.css">
     <?php if(isset($_SESSION['msg'])){?>
-        <div class="card"><?=$_SESSION['msg']?></div>
+      <div class="card-komen"><?=$_SESSION['msg']?></div>
     <?php 
 unset($_SESSION['msg']);
 }?>
